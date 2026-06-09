@@ -1,5 +1,5 @@
 import { config as loadEnv } from "dotenv"
-import { defineConfig, env } from "prisma/config"
+import { defineConfig } from "prisma/config"
 
 // Next.js stores secrets in `.env.local`; Prisma CLI defaults to `.env`.
 // Load both so a single source of truth works for migrations and runtime.
@@ -19,8 +19,9 @@ export default defineConfig({
     seed: "tsx prisma/seed.ts",
   },
   datasource: {
-    // DIRECT (5432) connection — Supabase manages migrations on the same DB;
-    // no separate shadow database is available, so we don't configure one.
-    url: env("DIRECT_URL"),
+    // Migrations use the DIRECT (5432) connection; fall back to DATABASE_URL.
+    // Plain process.env (not env()) so `prisma generate` in CI / Vercel builds
+    // never throws when the URL isn't present (generate doesn't need a DB).
+    url: process.env.DIRECT_URL || process.env.DATABASE_URL,
   },
 })
