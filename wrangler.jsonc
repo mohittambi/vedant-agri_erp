@@ -1,0 +1,35 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "agri-input-erp",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2025-04-01",
+  // nodejs_compat is required for Prisma's pg driver, pdf-lib and exceljs.
+  // It also auto-populates process.env from vars + secrets.
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "observability": {
+    "enabled": true
+  },
+  // ---------------------------------------------------------------------------
+  // Hyperdrive — pooled Postgres connection for Supabase (recommended on Workers).
+  // 1) Create it (see CLOUDFLARE.md):
+  //      wrangler hyperdrive create agri-erp-db --connection-string="<SUPABASE_POOLER_URL>"
+  // 2) Paste the returned id below and uncomment.
+  // The app reads HYPERDRIVE.connectionString first, then falls back to
+  // process.env.DATABASE_URL (see src/lib/prisma.ts).
+  // ---------------------------------------------------------------------------
+  // "hyperdrive": [
+  //   {
+  //     "binding": "HYPERDRIVE",
+  //     "id": "<your-hyperdrive-id>",
+  //     "localConnectionString": "postgresql://postgres:PASSWORD@db.PROJECT.supabase.co:5432/postgres"
+  //   }
+  // ],
+  "vars": {
+    "NEXT_PUBLIC_APP_NAME": "Agri Input ERP",
+    "WHATSAPP_API_VERSION": "v21.0"
+  }
+}

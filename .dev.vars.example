@@ -1,0 +1,11 @@
+# Local Cloudflare runtime variables (used by `wrangler` / OpenNext preview).
+# Copy to `.dev.vars` and fill in. NEVER commit `.dev.vars`.
+# These mirror the SERVER-side secrets you'll set in production with
+# `wrangler secret put <NAME>`.
+
+DATABASE_URL="postgresql://postgres.PROJECT:PASSWORD@aws-0-REGION.pooler.supabase.com:6543/postgres?pgbouncer=true"
+SUPABASE_SERVICE_ROLE_KEY="your-service-role-key"
+NEXT_PUBLIC_SUPABASE_URL="https://PROJECT.supabase.co"
+NEXT_PUBLIC_SUPABASE_ANON_KEY="your-anon-key"
+WHATSAPP_PHONE_NUMBER_ID=""
+WHATSAPP_ACCESS_TOKEN=""

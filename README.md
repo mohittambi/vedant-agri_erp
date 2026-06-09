@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Agri Input ERP 🌱
 
-## Getting Started
+A production-grade, multi-firm ERP for **agri-input distribution** — inventory with
+FIFO + batch/expiry tracking, GST billing (CGST/SGST/IGST), purchases, sales,
+ledgers, vouchers, reports and analytics.
 
-First, run the development server:
+## Tech stack
+
+- **Next.js 16** (App Router, Turbopack, Server Actions) · **React 19** · **TypeScript**
+- **Tailwind v4** · **ShadCN UI** · **React Hook Form + Zod** · **TanStack Table** · **Recharts**
+- **Prisma 7** (driver adapter) · **Supabase** (PostgreSQL · Auth · Storage · RLS)
+- PDF invoices (pdf-lib) · Excel import/export (exceljs) · WhatsApp (wa.me / Cloud API)
+- Deployable to **Cloudflare Workers** (OpenNext) or Vercel
+
+## Features (30 modules)
+
+Dashboard · Multi-firm · Users · **Role-based access (7 roles, 125 permissions)** ·
+Locations · Products · Categories · Manufacturers · Tax Groups ·
+**Inventory (FIFO, multi-location)** · Batches · **Expiry tracking** ·
+**Purchases** + returns · **Sales** + returns · Customers · Suppliers ·
+Customer/Supplier ledgers · Vouchers · **GST engine** · GST & P&L reports ·
+Analytics · Audit trail · Notifications · PDF invoices · Excel import/export.
+
+### Business rules enforced
+- Cash rate **<** credit rate (Zod + DB trigger)
+- FIFO inventory consumption · expired stock cannot be sold · real-time stock check
+- Automatic CGST/SGST vs IGST · complete audit logging · strict multi-firm isolation
+
+## Quick start
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env.local        # fill in Supabase credentials
+npm install
+npm run db:deploy                 # create schema (or: npx prisma db push)
+npm run db:sql                    # RLS, triggers, functions, storage buckets
+npm run db:seed                   # roles, permissions, super admin
+npm run db:demo                   # optional: a fully-populated demo firm
+npm run dev                       # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+See **[DEPLOYMENT.md](DEPLOYMENT.md)** for full setup and **[CLOUDFLARE.md](CLOUDFLARE.md)**
+for Cloudflare Workers deployment.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Architecture
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Every server action: `requirePermission()` → DB transaction → audit log, scoped to
+  the authenticated user's active firm.
+- Reusable primitives: generic `DataTable`, master-CRUD engine, shared invoice/ledger/
+  return components, a pure GST engine (`src/lib/gst.ts`).
+- Prisma runs as `postgres` (bypasses RLS); tenant isolation is enforced in app code,
+  with RLS as defence-in-depth for anon/authenticated key access.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Built with [Claude Code](https://claude.com/claude-code).
