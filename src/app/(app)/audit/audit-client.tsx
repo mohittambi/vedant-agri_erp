@@ -24,7 +24,7 @@ export function AuditClient({ rows }: { rows: AuditRow[] }) {
     { accessorKey: "user", header: "User" },
     { accessorKey: "action", header: "Action", cell: ({ row }) => <Badge variant="secondary" className={TONE[row.original.action] ?? ""}>{row.original.action}</Badge> },
     { accessorKey: "entity", header: "Entity" },
-    { accessorKey: "entityId", header: "Record", cell: ({ row }) => <span className="font-mono text-xs text-muted-foreground">{row.original.entityId?.slice(0, 8) ?? "—"}</span> },
+    // Record ID intentionally not displayed — it remains stored in the DB (audit_log.entityId).
   ]
   return <DataTable columns={columns} data={rows} searchPlaceholder="Search audit log..." pageSize={20} />
 }

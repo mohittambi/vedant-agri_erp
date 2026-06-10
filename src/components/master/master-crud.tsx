@@ -164,7 +164,12 @@ function MasterFormDialog({
                 name={def.name}
                 render={({ field }) => (
                   <FormItem className={def.colSpan === 2 ? "sm:col-span-2" : undefined}>
-                    {def.type !== "switch" && <FormLabel>{def.label}</FormLabel>}
+                    {def.type !== "switch" && (
+                      <FormLabel>
+                        {def.label}
+                        {def.required && <span className="ml-0.5 text-destructive">*</span>}
+                      </FormLabel>
+                    )}
                     <FormControl>
                       <FieldRenderer field={field} def={def} />
                     </FormControl>

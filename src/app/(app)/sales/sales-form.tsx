@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { useRouter } from "next/navigation"
-import { useForm, useFieldArray, type Resolver } from "react-hook-form"
+import { useForm, useFieldArray, useWatch, type Resolver } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2, Plus, Trash2 } from "lucide-react"
 import { toast } from "sonner"
@@ -52,7 +52,9 @@ export function SalesForm({
   })
   const { fields, append, remove } = useFieldArray({ control: form.control, name: "items" })
 
-  const watchItems = form.watch("items")
+  // useWatch (not form.watch) reliably re-renders on every nested field-array
+  // edit, including edits to an earlier row after a new row was appended.
+  const watchItems = useWatch({ control: form.control, name: "items" })
   const watchCustomer = form.watch("customerId")
   const watchSaleType = form.watch("saleType")
   const watchLocation = form.watch("locationId")
@@ -163,7 +165,8 @@ export function SalesForm({
                 <TableHead className="w-24">Qty</TableHead>
                 <TableHead className="w-28">Rate</TableHead>
                 <TableHead className="w-20">Disc%</TableHead>
-                <TableHead className="text-right">Amount</TableHead>
+                <TableHead className="text-right">Disc ₹</TableHead>
+                <TableHead className="text-right">Taxable</TableHead>
                 <TableHead></TableHead>
               </TableRow>
             </TableHeader>
@@ -188,7 +191,8 @@ export function SalesForm({
                     <TableCell><Input type="number" step="0.001" className="w-24" {...form.register(`items.${i}.quantity`)} /></TableCell>
                     <TableCell><Input type="number" step="0.01" className="w-28" {...form.register(`items.${i}.rate`)} /></TableCell>
                     <TableCell><Input type="number" step="0.01" className="w-20" {...form.register(`items.${i}.discountPct`)} /></TableCell>
-                    <TableCell className="text-right tabular-nums">{formatCurrency(line?.total ?? 0)}</TableCell>
+                    <TableCell className="text-right tabular-nums text-muted-foreground">{formatCurrency(line?.discountAmount ?? 0)}</TableCell>
+                    <TableCell className="text-right tabular-nums">{formatCurrency(line?.taxableAmount ?? 0)}</TableCell>
                     <TableCell>
                       <Button type="button" variant="ghost" size="icon" className="size-8" onClick={() => fields.length > 1 && remove(i)}>
                         <Trash2 className="size-4 text-destructive" />
@@ -206,6 +210,8 @@ export function SalesForm({
       <div className="flex justify-end">
         <Card className="w-full lg:max-w-sm">
           <CardContent className="space-y-1.5 py-4 text-sm">
+            <Row label="Subtotal" value={formatCurrency(totals.subtotal)} />
+            {totals.discountAmount > 0 && <Row label="Discount" value={`− ${formatCurrency(totals.discountAmount)}`} />}
             <Row label="Taxable" value={formatCurrency(totals.taxableAmount)} />
             {treatment === "INTRA_STATE" ? (
               <>

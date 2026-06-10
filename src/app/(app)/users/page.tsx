@@ -24,7 +24,7 @@ export default async function UsersPage() {
     const existing = byUser.get(ur.user.id)
     const label = ROLE_LABELS[ur.role.key as RoleKey] ?? ur.role.key
     if (existing) existing.roles.push(label)
-    else byUser.set(ur.user.id, { id: ur.user.id, fullName: ur.user.fullName, email: ur.user.email, isActive: ur.user.isActive, roles: [label] })
+    else byUser.set(ur.user.id, { id: ur.user.id, fullName: ur.user.fullName, email: ur.user.email, isActive: ur.user.isActive, roles: [label], roleKey: ur.role.key })
   }
 
   return (

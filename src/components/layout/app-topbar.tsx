@@ -2,6 +2,7 @@ import { FirmSwitcher } from "./firm-switcher"
 import { UserMenu } from "./user-menu"
 import { MobileNav } from "./mobile-nav"
 import { NotificationsBell } from "./notifications-bell"
+import { ThemeToggle } from "./theme-toggle"
 import type { NavGroup } from "@/lib/constants"
 import type { SessionUser } from "@/lib/auth"
 import { ROLE_LABELS, type RoleKey } from "@/lib/constants"
@@ -26,6 +27,7 @@ export function AppTopbar({
       <MobileNav nav={nav} />
       <FirmSwitcher firms={user.firms} activeFirmId={user.activeFirmId} />
       <div className="ml-auto flex items-center gap-1">
+        <ThemeToggle />
         <NotificationsBell count={unreadCount} />
         <UserMenu
           fullName={user.fullName}

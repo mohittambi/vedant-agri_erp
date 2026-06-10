@@ -18,6 +18,8 @@ export type FieldDef = {
   colSpan?: 1 | 2
   step?: string
   uppercase?: boolean
+  /** Shows a required (*) indicator on the label. */
+  required?: boolean
 }
 
 export type ColumnRender = "text" | "bool" | "percent" | "number"
@@ -52,7 +54,7 @@ export const MASTER_CONFIGS: Record<MasterModel, MasterConfig> = {
       isActive: z.boolean(),
     }),
     fields: [
-      { name: "name", label: "Category name", type: "text", colSpan: 2, placeholder: "Fertilizers" },
+      { name: "name", label: "Category name", type: "text", colSpan: 2, placeholder: "Fertilizers", required: true },
       { name: "isActive", label: "Active", type: "switch" },
     ],
     columns: [
@@ -77,7 +79,7 @@ export const MASTER_CONFIGS: Record<MasterModel, MasterConfig> = {
       isActive: z.boolean(),
     }),
     fields: [
-      { name: "name", label: "Manufacturer name", type: "text", colSpan: 2, placeholder: "Bayer CropScience" },
+      { name: "name", label: "Manufacturer name", type: "text", colSpan: 2, placeholder: "Bayer CropScience", required: true },
       { name: "code", label: "Code", type: "text" },
       { name: "gstin", label: "GSTIN", type: "text", uppercase: true },
       { name: "contact", label: "Contact", type: "text", colSpan: 2 },
@@ -106,8 +108,8 @@ export const MASTER_CONFIGS: Record<MasterModel, MasterConfig> = {
       isActive: z.boolean(),
     }),
     fields: [
-      { name: "name", label: "Name", type: "text", colSpan: 2, placeholder: "GST 18%" },
-      { name: "gstRate", label: "GST rate (%)", type: "number", step: "0.01" },
+      { name: "name", label: "Name", type: "text", colSpan: 2, placeholder: "GST 18%", required: true },
+      { name: "gstRate", label: "GST rate (%)", type: "number", step: "0.01", required: true },
       { name: "cessRate", label: "Cess rate (%)", type: "number", step: "0.01" },
       { name: "isActive", label: "Active", type: "switch" },
     ],
@@ -135,12 +137,13 @@ export const MASTER_CONFIGS: Record<MasterModel, MasterConfig> = {
       isActive: z.boolean(),
     }),
     fields: [
-      { name: "name", label: "Location name", type: "text", colSpan: 2, placeholder: "Main Store" },
-      { name: "code", label: "Code", type: "text", uppercase: true, placeholder: "MAIN" },
+      { name: "name", label: "Location name", type: "text", colSpan: 2, placeholder: "Main Store", required: true },
+      { name: "code", label: "Code", type: "text", uppercase: true, placeholder: "MAIN", required: true },
       {
         name: "type",
         label: "Type",
         type: "select",
+        required: true,
         options: [
           { value: "WAREHOUSE", label: "Warehouse" },
           { value: "STORE", label: "Store" },
