@@ -36,11 +36,15 @@ export default async function AppLayout({
     : 0
 
   return (
-    <div className="flex flex-1">
+    // h-dvh pins the shell to the viewport so `main` below is the only thing
+    // that scrolls — without it the whole page grows with the content and the
+    // sidebar scrolls away with it. min-h-0 lets the flex children shrink past
+    // their content height, which is what actually enables the inner scroll.
+    <div className="flex h-dvh overflow-hidden">
       <AppSidebar nav={nav} />
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col">
         <AppTopbar user={user} nav={nav} unreadCount={unreadCount} />
-        <main className="flex-1 overflow-y-auto p-4 md:p-6">{children}</main>
+        <main className="min-h-0 flex-1 overflow-y-auto p-4 md:p-6">{children}</main>
       </div>
     </div>
   )

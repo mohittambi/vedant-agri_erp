@@ -18,7 +18,9 @@ export function AppSidebar({ nav }: { nav: NavGroup[] }) {
         <span className="font-semibold tracking-tight">Agri ERP</span>
       </div>
 
-      <ScrollArea className="flex-1 px-2 py-3">
+      {/* min-h-0 so the nav scrolls inside the fixed-height sidebar instead of
+          stretching it past the viewport. */}
+      <ScrollArea className="min-h-0 flex-1 px-2 py-3">
         <nav className="flex flex-col gap-4">
           {nav.map((group) => (
             <div key={group.label}>
