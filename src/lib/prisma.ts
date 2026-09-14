@@ -19,12 +19,18 @@ import { PrismaPg } from "@prisma/adapter-pg"
  */
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient }
 
-// Supavisor pooler region for this project's Supabase database. The direct
+// Supavisor pooler host for this project's Supabase database. The direct
 // host `db.<ref>.supabase.co` is IPv6-only and is therefore unreachable from
 // Vercel's IPv4 serverless functions (Prisma P1001 "Can't reach database
 // server"). On Vercel we transparently rewrite a direct connection string to
 // the IPv4-friendly transaction pooler so no env-var change is required.
-const SUPABASE_POOLER_HOST = "aws-1-ap-northeast-1.pooler.supabase.com"
+//
+// The host is region-specific (`aws-<n>-<region>.pooler.supabase.com`) and must
+// match whichever Supabase project DATABASE_URL points at — a mismatch fails
+// with "Tenant or user not found", not a DNS error. Set SUPABASE_POOLER_HOST to
+// override without a code change; the default tracks the current project.
+const SUPABASE_POOLER_HOST =
+  process.env.SUPABASE_POOLER_HOST || "aws-0-ap-northeast-1.pooler.supabase.com"
 
 /**
  * Rewrite a Supabase *direct* connection string to the Supavisor transaction
